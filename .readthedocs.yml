@@ -14,4 +14,4 @@ formats:
 python:
   version: 2.7
   install:
-    - requirements: docs/requirements.txt
+    - requirements: esp-idf/docs/requirements.txt
