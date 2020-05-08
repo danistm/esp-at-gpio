@@ -65,7 +65,8 @@ temp_sdkconfig_path = '{}/sdkconfig.tmp'.format(builddir)
 cur_dir = subprocess.check_output(["pwd"]).decode()
 print("cur_dir:%s"%(cur_dir))
 
-subprocess.check_output(["cd ../../.. && make defconfig"])
+clone_log = subprocess.check_output(["cd ../.. && make defconfig"]).decode()
+print("clone_log:%s"%(clone_log))
 # note: trimming "examples" dir from KConfig/KConfig.projbuild as MQTT submodule
 # has its own examples in the submodule.
 kconfigs = subprocess.check_output(["find", "../../components",
