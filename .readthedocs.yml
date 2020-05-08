@@ -13,5 +13,5 @@ formats:
 # Optionally set the version of Python and requirements required to build your docs
 python:
   version: 2.7
-  install:
-    - requirements: esp-idf/docs/requirements.txt
+  # install:
+    # - requirements: esp-idf/docs/requirements.txt
