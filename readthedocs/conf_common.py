@@ -65,10 +65,12 @@ temp_sdkconfig_path = '{}/sdkconfig.tmp'.format(builddir)
 cur_dir = subprocess.check_output(["pwd"]).decode()
 print("cur_dir:%s"%(cur_dir))
 
-result = subprocess.check_call("make defconfig", shell=True, cwd="../..")
-print("%s"%(result))
-result = subprocess.check_call("python -m pip install --user -r docs/requirements.txt", shell=True, cwd="../../esp-idf")
-print("%s"%(result))
+try:
+    result = subprocess.check_call("make defconfig", shell=True, cwd="../..")
+    print("%s"%(result))
+except ImportError:
+    result = subprocess.check_call("python -m pip install --user -r docs/requirements.txt", shell=True, cwd="../../esp-idf")
+    print("%s"%(result))
 # note: trimming "examples" dir from KConfig/KConfig.projbuild as MQTT submodule
 # has its own examples in the submodule.
 kconfigs = subprocess.check_output(["find", "../../components",
