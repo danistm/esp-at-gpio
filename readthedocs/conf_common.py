@@ -62,6 +62,8 @@ call_with_python('../gen-dxd.py')
 print("Generating kconfig.inc from kconfig contents")
 kconfig_inc_path = '{}/inc/kconfig.inc'.format(builddir)
 temp_sdkconfig_path = '{}/sdkconfig.tmp'.format(builddir)
+subprocess.check_output(["pwd"])
+subprocess.check_output(["cd ../.. && make defconfig"])
 # note: trimming "examples" dir from KConfig/KConfig.projbuild as MQTT submodule
 # has its own examples in the submodule.
 kconfigs = subprocess.check_output(["find", "../../components",
