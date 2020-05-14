@@ -29,6 +29,9 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "nvs_flash.h"
+#include "driver/gpio.h"
+
+#define LUCKY3_LED_GPIO 5							//match the GPIO pin on the Lucky3 board
 
 #ifdef CONFIG_AT_WIFI_COMMAND_SUPPORT
 #include "esp_event_loop.h"
@@ -98,8 +101,129 @@ static uint8_t at_setupCmdCipupdate(uint8_t para_num)
     return ESP_AT_RESULT_CODE_ERROR;
 }
 
+static uint8_t at_exeCmdGpioSet(uint8_t para_num)
+{
+	int32_t pin = 0;
+	int32_t value = 0;
+	int32_t cnt = 0;
+	
+	if (esp_at_get_para_as_digit(cnt++, &pin) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (esp_at_get_para_as_digit(cnt++, &value) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (pin < 0 || pin > 0x27) 
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+
+	}	
+	
+	if (value < 0 || value > 1)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (gpio_set_level(pin, value) != ESP_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	return ESP_AT_RESULT_CODE_OK;
+}
+
+static uint8_t at_exeCmdGpioInit(uint8_t para_num)
+{
+	int32_t pin = 0;
+	int32_t dir = 0;
+	int32_t pull = 0;
+	int32_t cnt = 0;
+	
+	if (esp_at_get_para_as_digit(cnt++, &pin) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (esp_at_get_para_as_digit(cnt++, &dir) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (esp_at_get_para_as_digit(cnt++, &pull) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (pin < 0 || pin > 39) 
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+
+	}	
+	
+	if (dir < 0 || dir > 3)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (pull < 0 || pull > 3)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	gpio_pad_select_gpio(pin);
+	
+	/* if set to output OD the register value to be programmed is 4 */
+	if (dir == 3) dir = 4;
+	
+	if (gpio_set_direction(pin, dir) != ESP_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (gpio_set_pull_mode(pin, pull) != ESP_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	return ESP_AT_RESULT_CODE_OK;	
+}
+
+static uint8_t at_exeCmdGpioRead(uint8_t para_num)
+{
+	int32_t pin = 0;
+	int32_t cnt = 0;
+	char buf[6] = { 0 };
+	
+	if (esp_at_get_para_as_digit(cnt++, &pin) != ESP_AT_PARA_PARSE_RESULT_OK)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	if (pin < 0 || pin > 39) 
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}	
+	
+	sprintf(buf, "\r\n%1u\r\n", gpio_get_level(pin));
+	
+	if (esp_at_port_write_data((uint8_t*)buf, sizeof(buf)) < 0)
+	{
+		return ESP_AT_RESULT_CODE_ERROR;
+	}
+	
+	return ESP_AT_RESULT_CODE_PROCESS_DONE;
+	
+}
+
 static esp_at_cmd_struct at_update_cmd[] = {
     {"+CIUPDATE", NULL, NULL, at_setupCmdCipupdate, at_exeCmdCipupdate},
+	{"+GPIOSET", NULL, NULL, at_exeCmdGpioSet, NULL},
+	{"+GPIOINIT", NULL, NULL, at_exeCmdGpioInit, NULL},
+	{"+GPIOREAD", NULL, NULL, at_exeCmdGpioRead, NULL}
 };
 #endif
 
@@ -123,8 +247,10 @@ static void initialise_wifi(void)
 }
 #endif
 
+
 void app_main()
 {
+	
     const esp_partition_t * partition = esp_at_custom_partition_find(0x40, 0xff, "factory_param");
     char* data = NULL;
     uint32_t module_id = 0;
@@ -299,5 +425,6 @@ void app_main()
 #ifdef CONFIG_AT_OTA_SUPPORT
     esp_at_custom_cmd_array_regist (at_update_cmd, sizeof(at_update_cmd)/sizeof(at_update_cmd[0]));
 #endif
+	
     at_custom_init();
 }
