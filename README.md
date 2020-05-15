@@ -1,7 +1,27 @@
-# GPIO Commands added
+# GPIO Commands added (beta)
 
 Check
-- [ESP_AT_Commands_Set.md](docs/ESP_AT_Commands_Set.md): ESP AT Command Set  
+- AT+GPIOINIT=<pin number>,<dir>,<pullup>
+  dir: 0 = disable
+       1 = input
+       2 = output
+       3 = output open drain
+  pullup: 0 = pullup
+          1 = pulldown
+          2 = pullup + pulldown
+          3 = float
+  response: OK or ERROR
+  
+ - AT+GPIOSET=<pin number>,<state>
+  state: 0 = RESET
+         1 = SET
+  
+  response: OK or ERROR
+  
+ - AT+GPIOREAD=<pin number>
+  response: 0 if input low
+            1 in input high
+  note: pin must be configured as input
 
 # Overview
 libat_core.a is AT Command Core, and it is the core of AT command, including the default AT instruction set, the AT command parsing, execution and responding. The lib contains 4 kinds of command, such as `AT+TEST=?`, `AT+TEST?`, `AT+TEST=“abc”` and `AT+TEST`. It supports custom AT commands based on the lib and related APIs, and ones can also define input and output medium, like uart, spi, socket, bt, etc.
