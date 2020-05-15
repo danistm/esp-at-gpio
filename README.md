@@ -1,7 +1,7 @@
 # GPIO Commands added (beta)
 
 Check
-AT+GPIOINIT=<gpio number>,<dir>,<pullup>
+`AT+GPIOINIT=<gpio number>,<dir>,<pullup>`
   dir: 0 = disable
        1 = input
        2 = output
@@ -12,13 +12,13 @@ AT+GPIOINIT=<gpio number>,<dir>,<pullup>
           3 = float
   response: OK or ERROR
   
- - AT+GPIOSET=<pin number>,<state>
+ `AT+GPIOSET=<pin number>,<state>`
   state: 0 = RESET
          1 = SET
   
   response: OK or ERROR
   
- - AT+GPIOREAD=<pin number>
+ `AT+GPIOREAD=<pin number>`
   response: 0 if input low
             1 in input high
   note: pin must be configured as input
