@@ -1,7 +1,8 @@
 # GPIO Commands added (beta)
 
-`AT+GPIOINIT=<gpio number>,<dir>,<pullup>`\r\n
- dir: 0 = disable
+`AT+GPIOINIT=<gpio number>,<dir>,<pullup>`
+
+dir: 0 = disable
        1 = input
        2 = output
        3 = output open drain
