@@ -1,4 +1,4 @@
-# GPIO Commands added (beta)
+# GPIO Commands added (beta) [tested on ESP32-WROOM-32U only]
 
 `AT+GPIOINIT=<gpio number>,<dir>,<pullup>`
 
