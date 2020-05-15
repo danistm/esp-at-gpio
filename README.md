@@ -1,7 +1,7 @@
 # GPIO Commands added (beta)
 
 Check
-- AT+GPIOINIT=<pin number>,<dir>,<pullup>
+AT+GPIOINIT=<gpio number>,<dir>,<pullup>
   dir: 0 = disable
        1 = input
        2 = output
