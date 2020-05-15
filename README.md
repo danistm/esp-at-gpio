@@ -1,5 +1,7 @@
 # GPIO Commands added (beta) [tested on ESP32-WROOM-32U only]
 
+DISCLAIMER: use at your own risk.
+
 `AT+GPIOINIT=<gpio number>,<dir>,<pullup>`
 
 dir: 0 = disable
