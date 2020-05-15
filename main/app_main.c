@@ -177,7 +177,7 @@ static uint8_t at_exeCmdGpioInit(uint8_t para_num)
 	gpio_pad_select_gpio(pin);
 	
 	/* if set to output OD the register value to be programmed is 4 */
-	if (dir == 3) dir = 4;
+	if (dir == 3) dir = GPIO_MODE_OUTPUT_OD;
 	
 	if (gpio_set_direction(pin, dir) != ESP_OK)
 	{
