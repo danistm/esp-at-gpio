@@ -1,24 +1,25 @@
 # GPIO Commands added (beta)
 
-Check
 `AT+GPIOINIT=<gpio number>,<dir>,<pullup>`
-  dir: 0 = disable
+ dir: 0 = disable
        1 = input
        2 = output
        3 = output open drain
-  pullup: 0 = pullup
+ pullup: 0 = pullup
           1 = pulldown
           2 = pullup + pulldown
           3 = float
-  response: OK or ERROR
+ response: OK or ERROR
   
  `AT+GPIOSET=<pin number>,<state>`
+  
   state: 0 = RESET
          1 = SET
   
   response: OK or ERROR
   
  `AT+GPIOREAD=<pin number>`
+  
   response: 0 if input low
             1 in input high
   note: pin must be configured as input
