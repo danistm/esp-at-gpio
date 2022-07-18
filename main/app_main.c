@@ -174,7 +174,7 @@ static uint8_t at_exeCmdGpioInit(uint8_t para_num)
 		return ESP_AT_RESULT_CODE_ERROR;
 	}
 	
-	gpio_pad_select_gpio(pin);
+	gpio_reset_pin(pin);
 	
 	/* if set to output OD the register value to be programmed is 4 */
 	if (dir == 3) dir = GPIO_MODE_OUTPUT_OD;
